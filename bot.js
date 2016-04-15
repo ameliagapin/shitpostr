@@ -447,8 +447,11 @@ function post_photo(message_string, where) {
 		caption = splits[1];
 	}
 
+	url = url.replace('<','');
+	url = url.replace('>','');
+
 	options = {
-		link: url,
+		source: url,
 		caption: caption
 	};
 	tumblr.photo(config.tumblr_blog, options, function (err, data) {
