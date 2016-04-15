@@ -12,3 +12,4 @@ Janky Hack Day project to make Tumblr shit posts from Slack
 * `.future <number>`: Will wait <number> seconds and then post all messages during that time frame
 * `.garbage <number>`: Creates a text post of <number> random sentences
 * `.link <url>`: Creates link post for <ur>
+* `.photo <url> <caption>`: Creates a photo post using the photo at <url> and with optional <caption>
