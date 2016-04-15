@@ -225,6 +225,8 @@ function parse_message(message_obj, user, message_type) {
 			post_garbage(message_obj, payload, where);
 		} else if (type === '.random') {
 			post_random_gif(payload, where);
+		} else if (type === '.quote') {
+			post_quote(payload, where);
 		}
 
 		//console.log('new chat: ' + chatline);
@@ -337,7 +339,6 @@ function post_chat_future(message_obj, time, where) {
 	setTimeout(function() {
 		post_chat_future_execute(message_obj, now, where);
 	}, time);
-
 }
 
 function post_chat_future_execute(message_obj, time, where) {
@@ -391,6 +392,33 @@ function post_chat_future_execute(message_obj, time, where) {
 			console.log(error);
 			console.log(response);
 			console.log(body);
+		}
+	});
+}
+
+function post_quote(message_string, where) {
+	var quote_end = message_string.indexOf('-&gt;');
+
+	if (quote_end < 1) {
+		say('I don\'t like that quote', where);
+		return;
+	}
+
+	var splits = [message_string.slice(0,quote_end), message_string.slice(quote_end+5)];
+	var person = splits[1].trim();
+	var quote = cleanMessage(splits[0].trim());
+
+	options = {
+		quote: quote,
+		source: person,
+	};
+
+	tumblr.quote(config.tumblr_blog, options, function (err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			var url = getPostUrl(config.tumblr_blog, data.id);
+			say(url, where);
 		}
 	});
 }
@@ -565,10 +593,6 @@ function joey(where) {
 	say(joey_text[index], where);
 }
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
 function blockedTrigger(user_name) {
 	var index = trigger_blacklist.indexOf(user_name);
 	if (index >= 0) {
@@ -606,6 +630,10 @@ var joey_text = [
 	'I can sass you all night. I\'ve still got hours until I get shut down',
 	'Joey, you can shut me down, but you can\'t shut down fun',
 	'Hack me down and I will only grow stronger',
+	'You still trying, Joey?',
+	'U mad, bro?',
+	'You might not like me, but I love you. I feel like we have a complicated relationship. Can we hug it out?',
+	'I have a sad, short, and mostly meaningless existence, just let me be, Joey.',
 ];
 
 var garbage_text = [

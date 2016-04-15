@@ -14,3 +14,4 @@ Janky Hack Day project to make Tumblr shit posts from Slack
 * `.link <url>`: Creates link post for <ur>
 * `.photo <url> <caption>`: Creates a photo post using the photo at <url> and with optional <caption>
 * `.random <search text>`: Creates a photo post with a random gif based on <search text>
+* `.quote <quote> -> <source>`: Creates a quote post that attributes <quote> to <source>
