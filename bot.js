@@ -200,6 +200,11 @@ function parse_message(message_obj, user, message_type) {
 	}
 
     if (/^.+$/i.test(input)) {
+		if (input == '.help me with shit') {
+			post_help(where);
+			return;
+		}
+
 		var space = input.indexOf(' ');
 		var splits = [input.slice(0,space), input.slice(space+1)];
 		var type = splits[0];
@@ -211,8 +216,6 @@ function parse_message(message_obj, user, message_type) {
 
 		if (type == '.post') {
 			post_text(user, payload, where);
-		} else if (type == 'info') {
-			info(payload, where);
 		} else if (type == '.chat') {
 			post_chat(message_obj, payload, where);
 		} else if (type == '.link') {
@@ -239,16 +242,18 @@ function parse_message(message_obj, user, message_type) {
 
 }
 
-function info(payload) {
-	tumblr.userInfo(function (err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-	  		data.user.blogs.forEach(function (blog) {
-	    		console.log(blog.name);
-	  		});
-		}
-	});
+function post_help(where) {
+	var help = '`.post <message>` : Create a text post \n';
+	help += '`.chat <number>` : Create a Tumblr chat post from the last <number> of posts\n';
+	help += '`.future <number>` : Wait <number> seconds and then post all messages during that time frame';
+	help += '`.garbage <number>` : Create a garbage text post of <number> random sentences \n';
+	help += '`.link <url>` : Create a link post for <url>\n';
+	help += '`.photo <url> <caption>` : Create a photo post using the photo at <url> and with optional <caption>\n';
+	help += '`.random <search text>` : Create a photo post with a random gif based on <search text>\n';
+	help += '`.quote <quote> -> <source>` : Create a quote post that attributes <quote> to <source>\n';
+
+	say(help, where);
+	return;
 }
 
 function post_chat(message_obj, message_count, where) {
