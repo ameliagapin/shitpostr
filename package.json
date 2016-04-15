@@ -1,6 +1,6 @@
 {
 	"name": "shitpostr",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "It's shitpostin' time.",
 	"author": {
 		"name": "Amelia Gapin"
@@ -9,7 +9,6 @@
 		"slack-client": "1.4.0",
 		"tumblr.js": "0.0.7",
 		"request": "2.71.0",
-		"sleep": "3.0.1",
 		"microtime": "2.0.0"
 	}
 }
