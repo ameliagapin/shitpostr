@@ -246,6 +246,7 @@ function post_help(where) {
 	var help = '`.post <message>` : Create a text post \n';
 	help += '`.chat <number>` : Create a Tumblr chat post from the last <number> of posts\n';
 	help += '`.future <number>` : Wait <number> seconds and then post all messages during that time frame\n';
+	help += '`.future ?` : Wait some random amount of time and then post all messages during that time frame\n';
 	help += '`.garbage <number>` : Create a garbage text post of <number> random sentences \n';
 	help += '`.link <url>` : Create a link post for <url>\n';
 	help += '`.photo <url> <caption>` : Create a photo post using the photo at <url> and with optional <caption>\n';
@@ -330,7 +331,10 @@ function post_chat(message_obj, message_count, where) {
 }
 
 function post_chat_future(message_obj, time, where) {
-	 if (isNaN(time) || time < 1 || time > 30) {
+	if (time == '?') {
+		time = getRandomInt(3, 60);
+		console.log('Random future: ' + time);
+	} else if (isNaN(time) || time < 1 || time > 30) {
 		var user_from = slack.getUserByID(message_obj.user);
 		say('Calm down, ' + user_from.name + ', and enjoy a McCoulton', where);
 		return;
