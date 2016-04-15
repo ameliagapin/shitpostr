@@ -497,6 +497,8 @@ function post_photo(message_string, where) {
 	};
 	tumblr.photo(config.tumblr_blog, options, function (err, data) {
 		if (err) {
+			say('As a woman,', where);
+			say('This Tumblr API\'s a bitch', where);
 			console.log(err);
 		} else {
 			// console.log(data);
@@ -507,12 +509,14 @@ function post_photo(message_string, where) {
 }
 
 function post_random_gif(message_string, where) {
+	say('Hang on a sec, here. All these API take a minute. Be back in a _gif_...', where);
 	giphy.translate({
 	    s: message_string,
 	    rating: 'r',
 	    fmt: 'json'
 	}, function(err, res) {
 		if (err) {
+			say('Sorry, I\'m a failure', where);
 			console.log(err);
 		} else if (res.data && res.data.id) {
 			var url = 'https://media.giphy.com/media/' + res.data.id + '/giphy.gif';
