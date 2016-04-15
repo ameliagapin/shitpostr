@@ -350,6 +350,11 @@ function post_chat_future_execute(message_obj, time, where) {
 	    if (!error && response.statusCode === 200) {
 			var conversation = '';
 
+			if (body.messages.length == 0) {
+				say('Sorry, none of y\'all said anything!', where);
+				return;
+			}
+
 			for (var i = body.messages.length-1; i >= 0; i--) {
 				var message = body.messages[i];
 				if (message_obj.ts == message.ts) {
