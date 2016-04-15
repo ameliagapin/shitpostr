@@ -6,7 +6,8 @@
 var slack_client = require('slack-client');
 var Message = require('./node_modules/slack-client/src/message');
 var tumblr_client = require('tumblr.js');
-var request = require('request')
+var request = require('request');
+var giphy = require('giphy-api')();
 
 // check for a config file when calling this script, we need it
 if (process.argv.length < 3 || process.argv[2] === undefined) {
@@ -222,6 +223,8 @@ function parse_message(message_obj, user, message_type) {
 			post_chat_future(message_obj, payload, where);
 		} else if (type === '.garbage') {
 			post_garbage(message_obj, payload, where);
+		} else if (type === '.random') {
+			post_random_gif(payload, where);
 		}
 
 		//console.log('new chat: ' + chatline);
@@ -461,6 +464,21 @@ function post_photo(message_string, where) {
 			// console.log(data);
 			var url = getPostUrl(config.tumblr_blog, data.id);
 			say(url, where);
+		}
+	});
+}
+
+function post_random_gif(message_string, where) {
+	giphy.translate({
+	    s: message_string,
+	    rating: 'r',
+	    fmt: 'json'
+	}, function(err, res) {
+		if (err) {
+			console.log(err);
+		} else if (res.data && res.data.id) {
+			var url = 'https://media.giphy.com/media/' + res.data.id + '/giphy.gif';
+			post_photo(url, where);
 		}
 	});
 }
