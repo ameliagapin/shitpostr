@@ -9,6 +9,8 @@ var tumblr_client = require('tumblr.js');
 var request = require('request');
 var giphy = require('giphy-api')();
 
+var bee_movie = require('./bee_text');
+
 // check for a config file when calling this script, we need it
 if (process.argv.length < 3 || process.argv[2] === undefined) {
 	console.log('testbot requires a config file passed to it, please see README.');
@@ -230,6 +232,8 @@ function parse_message(message_obj, user, message_type) {
 			post_random_gif(payload, where);
 		} else if (type === '.quote') {
 			post_quote(payload, where);
+		} else if (type === '.bee' || type === '.randerson') {
+			post_bee(message_obj, payload, where);
 		}
 
 		//console.log('new chat: ' + chatline);
@@ -248,6 +252,7 @@ function post_help(where) {
 	help += '`.future <number>` : Wait <number> seconds and then post all messages during that time frame\n';
 	help += '`.future ?` : Wait some random amount of time and then post all messages during that time frame\n';
 	help += '`.garbage <number>` : Create a garbage text post of <number> random sentences \n';
+    help += '`.bee <number>` : Create a garbage text post of <number> random sentences from the Bee Movie script \n';
 	help += '`.link <url>` : Create a link post for <url>\n';
 	help += '`.photo <url> <caption>` : Create a photo post using the photo at <url> and with optional <caption>\n';
 	help += '`.random <search text>` : Create a photo post with a random gif based on <search text>\n';
@@ -340,8 +345,11 @@ function post_chat_future(message_obj, time, where) {
 		return;
 	}
 
-	var microtime = require('microtime');
-	var now = microtime.nowDouble();
+	// var microtime = require('microtime');
+	// var now2 = microtime.nowDouble();
+
+    var now = (new Date().getTime())/1000;
+    now = now + '000'
 
 	time = time * 1000;
 
@@ -463,6 +471,36 @@ function post_garbage(message_obj, count, where) {
 	for (var x = 0; x < count; x++) {
 		var index = getRandomInt(0, garbage_text.length);
 		var junk = garbage_text[index];
+		message += junk + ' ';
+	}
+
+	options = {
+		// title: title,
+		body: message.trim()
+	};
+	tumblr.text(config.tumblr_blog, options, function (err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			// console.log(data);
+			var url = getPostUrl(config.tumblr_blog, data.id);
+			say(url, where);
+		}
+	});
+}
+
+function post_bee(message_obj, count, where) {
+	if (isNaN(count) || count < 1 || count > 30) {
+	   var user_from = slack.getUserByID(message_obj.user);
+	   say(user_from.name + ', really?', where);
+	   return;
+   }
+
+	var message = '';
+
+	for (var x = 0; x < count; x++) {
+		var index = getRandomInt(0, bee_movie.length);
+		var junk = bee_movie[index];
 		message += junk + ' ';
 	}
 
