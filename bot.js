@@ -314,6 +314,15 @@ function post_chat(message_obj, message_count, where) {
 				conversation += user.name + ': ' + text.trim() + '\r\n';
 			}
 
+            if (conversation.length == 0) {
+                say('I don\'t know, man. Something got weird in there. Whatever.', where);
+                console.log('No conversation?');
+        		console.log(error);
+        		console.log(response);
+        		console.log(body);
+                return;
+            }
+
 			options = {
 				// title: 'Hack Day',
 				conversation: conversation,
